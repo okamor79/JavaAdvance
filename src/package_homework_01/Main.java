@@ -210,7 +210,24 @@ public class Main {
 
     static void printAllHumanInfo() throws Exception {
 
-        String query = "SELECT * FROM human h JOIN univer u ON u.id = h.univer_id JOIN hobby ho ON ho.id = h.hobby_id;";
+        String query = "SELECT * FROM human h JOIN univer u ON u.id = h.univer_id JOIN hobby ho ON ho.id = h.hobby_id ORDER BY h.id;";
+
+        PreparedStatement preStm = conn.prepareStatement(query);
+        ResultSet res = preStm.executeQuery();
+        List<String> list = new ArrayList<>();
+        while (res.next()) {
+            list.add(
+                    res.getInt("h.id") + "\t\t| "
+                    + res.getString("h.fname") + " "
+                    + res.getString("h.lname") + "\t\t| "
+                    + res.getInt("h.age") + "\t\t| "
+                    + res.getString("h.city") + "\t\t| "
+                    + res.getString("u.name") + "\t\t| "
+                    + res.getString("ho.name")
+            );
+        }
+        preStm.close();
+        list.forEach(System.out::println);
 
     }
 }
