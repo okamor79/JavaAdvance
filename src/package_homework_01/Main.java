@@ -33,6 +33,9 @@ public class Main {
                     case "3":
                         deleteHuman();
                         break;
+                    case "4":
+                        printAllHumanInfo();
+                        break;
                     case "7":
                         return;
                 }
@@ -80,9 +83,11 @@ public class Main {
 
         String dropTable2 = "drop table if exists univer;";
         String crTable2 = "create table univer(id int primary key auto_increment, name varchar(20));";
+        String altTable2 = "alter table human add foreign key (univer_id) references univer(id);";
 
         String dropTable3 = "drop table if exists hobby;";
         String crTable3 = "create table hobby(id int primary key auto_increment, name varchar(20));";
+        String altTable3 = "alter table human add foreign key (hobby_id) references hobby(id);";
 
         Statement stmt = conn.createStatement();
 
@@ -91,9 +96,11 @@ public class Main {
 
         stmt.execute(dropTable2);
         stmt.execute(crTable2);
+        stmt.execute(altTable2);
 
         stmt.execute(dropTable3);
         stmt.execute(crTable3);
+        stmt.execute(altTable3);
         stmt.close();
 
         for (int i = 0; i < insTable2.length; i++) {
@@ -199,8 +206,11 @@ public class Main {
         PreparedStatement prStm = conn.prepareStatement(delQuery);
         prStm.setInt(1, delID);
         prStm.executeUpdate();
+    }
 
+    static void printAllHumanInfo() throws Exception {
 
+        String query = "SELECT * FROM human h JOIN univer u ON u.id = h.univer_id JOIN hobby ho ON ho.id = h.hobby_id;";
 
     }
 }
