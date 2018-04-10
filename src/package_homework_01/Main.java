@@ -36,6 +36,12 @@ public class Main {
                     case "4":
                         printAllHumanInfo();
                         break;
+                    case "5":
+                        printIDHumanInfo();
+                        break;
+                    case "6":
+                        updateHumanByID();
+                        break;
                     case "7":
                         return;
                 }
@@ -206,6 +212,8 @@ public class Main {
         PreparedStatement prStm = conn.prepareStatement(delQuery);
         prStm.setInt(1, delID);
         prStm.executeUpdate();
+        prStm.close();
+
     }
 
     static void printAllHumanInfo() throws Exception {
@@ -218,16 +226,73 @@ public class Main {
         while (res.next()) {
             list.add(
                     res.getInt("h.id") + "\t\t| "
-                    + res.getString("h.fname") + " "
-                    + res.getString("h.lname") + "\t\t| "
-                    + res.getInt("h.age") + "\t\t| "
-                    + res.getString("h.city") + "\t\t| "
-                    + res.getString("u.name") + "\t\t| "
-                    + res.getString("ho.name")
+                            + res.getString("h.fname") + " "
+                            + res.getString("h.lname") + "\t\t| "
+                            + res.getInt("h.age") + "\t\t| "
+                            + res.getString("h.city") + "\t\t| "
+                            + res.getString("u.name") + "\t\t| "
+                            + res.getString("ho.name")
             );
         }
         preStm.close();
         list.forEach(System.out::println);
+    }
+
+    static void printIDHumanInfo() throws Exception {
+
+        printAllHumanInfo();
+
+        String query = "SELECT * FROM human h JOIN univer u ON u.id = h.univer_id JOIN hobby ho ON ho.id = h.hobby_id WHERE h.id = ? ORDER BY h.id;";
+
+        System.out.printf("Enter Human ID ");
+        int prnID = new Scanner(System.in).nextInt();
+
+        PreparedStatement preStm = conn.prepareStatement(query);
+        preStm.setInt(1, prnID);
+        ResultSet res = preStm.executeQuery();
+        List<String> list = new ArrayList<>();
+        while (res.next()) {
+            list.add(
+                    res.getInt("h.id") + "\t\t| "
+                            + res.getString("h.fname") + " "
+                            + res.getString("h.lname") + "\t\t| "
+                            + res.getInt("h.age") + "\t\t| "
+                            + res.getString("h.city") + "\t\t| "
+                            + res.getString("u.name") + "\t\t| "
+                            + res.getString("ho.name")
+            );
+        }
+        preStm.close();
+        System.out.println();
+        list.forEach(System.out::println);
+    }
+
+    static void updateHumanByID() throws Exception {
+
+        printAllHumanInfo();
+
+        String query = "UPDATE human h SET h.fname = ?, h.lname = ?, h.city = ? WHERE h.id = ?;";
+
+        System.out.printf("Enter human ID ");
+        int humID = new Scanner(System.in).nextInt();
+        System.out.printf("Enter new First name ");
+        String newFName = new Scanner(System.in).next();
+        System.out.printf("Enter new Last name ");
+        String newLName = new Scanner(System.in).next();
+        System.out.printf("Enter new city name ");
+        String newCity = new Scanner(System.in).next();
+
+        PreparedStatement preStm = conn.prepareStatement(query);
+        preStm.setString(1, newFName);
+        preStm.setString(2, newLName);
+        preStm.setString(3, newCity);
+        preStm.setInt(4, humID);
+
+        preStm.executeUpdate();
+        preStm.close();
+
+        printAllHumanInfo();
 
     }
+
 }
