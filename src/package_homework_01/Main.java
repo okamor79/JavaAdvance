@@ -190,19 +190,8 @@ public class Main {
     }
 
     static void deleteHuman() throws Exception {
-        String query = "SELECT ID, FNAME, LNAME FROM HUMAN";
-        List<String> list = new ArrayList<>();
-        PreparedStatement preStm = conn.prepareStatement(query);
-        ResultSet res = preStm.executeQuery();
-        while (res.next()) {
-            list.add(
-                    res.getInt("id") + "\t| "
-                            + "First Name " + res.getString("fname") + "\t| "
-                            + "Last Name " + res.getString("lname"));
-        }
-        preStm.close();
 
-        list.forEach(System.out::println);
+        printAllHumanInfo();
 
         System.out.println();
         System.out.printf("Enter human id to remove database ");
@@ -213,6 +202,8 @@ public class Main {
         prStm.setInt(1, delID);
         prStm.executeUpdate();
         prStm.close();
+
+        printAllHumanInfo();
 
     }
 
